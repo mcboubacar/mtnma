@@ -178,7 +178,7 @@ if not retard.empty:
         x="libellé activité", y="% execution", color="Domaine", 
     )
     fig_retard.update_layout(
-        yaxis=dict(range=[-1, 100]),
+        yaxis_range=[-0.5, 0.5],
         xaxis_tickangle=45
     )
     
