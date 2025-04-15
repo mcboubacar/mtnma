@@ -115,15 +115,24 @@ st.plotly_chart(fig_domaine, use_container_width=True)
 
 # Graphique 2 : Activités par responsable
 st.markdown("##### 👤 Nombre d'Activités par Responsable")
-data_resp = activites["Responsable"].value_counts().reset_index()
-data_resp.columns = ["Responsable", "Nombre"]
-fig_resp = go.Figure(data=[go.Pie(
-    labels=data_resp["Responsable"],
-    values=data_resp["Nombre"],
-    textinfo="value",
-    insidetextorientation="radial",
-    marker=dict(colors=px.colors.qualitative.Set3)
-)])
+# data_resp = activites["Responsable"].value_counts().reset_index()
+# data_resp.columns = ["Responsable", "Nombre"]
+# fig_resp = go.Figure(data=[go.Pie(
+#     labels=data_resp["Responsable"],
+#     values=data_resp["Nombre"],
+#     textinfo="value",
+#     insidetextorientation="radial",
+#     marker=dict(colors=px.colors.qualitative.Set3)
+# )])
+activites["Resp-trq"] = activites["Responsable"].apply(tronquer)
+fig_domaine = px.bar(
+    activites.groupby(["Resp-trq","Statut"]).size().reset_index(name="Nombre d'activités"),
+    x="Resp-trq", y="Nombre d'activités", 
+    text_auto=True, color="Statut",
+    labels={'Resp-trq': 'Responsable'},
+    width=800,height=500,
+    color_discrete_map={"Terminée": "#2ca02c", "En cours": "#Cca02c"},
+)
 st.plotly_chart(fig_resp, use_container_width=True)
 
 # Graphique 3 : Répartition des activites par statuts
