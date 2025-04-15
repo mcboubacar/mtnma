@@ -125,7 +125,7 @@ st.markdown("##### 👤 Nombre d'Activités par Responsable")
 #     marker=dict(colors=px.colors.qualitative.Set3)
 # )])
 activites["Resp-trq"] = activites["Responsable"].apply(tronquer)
-fig_domaine = px.bar(
+fig_resp = px.bar(
     activites.groupby(["Resp-trq","Statut"]).size().reset_index(name="Nombre d'activités"),
     x="Resp-trq", y="Nombre d'activités", 
     text_auto=True, color="Statut",
