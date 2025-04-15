@@ -12,6 +12,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 #from utils.data import load_data
 import io
+from PIL import Image  # Pour charger l'image
+
 
 st.set_page_config(page_title="Suivi des Activités TIC", layout="wide")
 
@@ -19,7 +21,14 @@ st.set_page_config(page_title="Suivi des Activités TIC", layout="wide")
 MAX_LIBELLE_LEN = 30
 def tronquer(x): return x if len(x) < MAX_LIBELLE_LEN else x[:MAX_LIBELLE_LEN - 3] + "..."
 
-st.title("📊 Tableau de bord")
+# Charger le logo
+logo = Image.open("SCEAU MAURITANIE.jpg")
+
+col1, col2 = st.columns([1,4])
+with col1:
+    st.image(logo, width=80)  # Ajustez la largeur
+with col2:
+    st.title("📊 Tableau de bord")
 
 # Chargement des données (admin=True => toutes les données)
 # df = load_data(admin=True)
@@ -170,18 +179,15 @@ retard = activites[
     (activites["% execution"] < 100)
 ]
 
-st.dataframe(retard)
 if not retard.empty:
-    retard["libellé activité"] = retard["Activité"].apply(tronquer)
-    fig_retard = px.bar(
-        retard,
-        x="libellé activité", y="% execution", color="Domaine", 
-    )
-    fig_retard.update_layout(
-        yaxis_range=[-0.5, 0.5],
-        xaxis_tickangle=45
-    )
-    
-    st.plotly_chart(fig_retard, use_container_width=True)
+    if retard["% execution"].sum()==0:
+        st.dataframe(retard[["Responsable","Domaine","Activité","Date_limite","% execution","Statut"]])
+    else:    
+        retard["libellé activité"] = retard["Activité"].apply(tronquer)
+        fig_retard = px.bar(
+            retard,
+            x="libellé activité", y="% execution", color="Domaine", color_continuous_scale='Viridis'
+        )
+        st.plotly_chart(fig_retard, use_container_width=True)
 else:
     st.success("🎉 Aucune activité en retard selon les filtres OU données de suivi non renseignées")
