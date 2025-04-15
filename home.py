@@ -170,7 +170,7 @@ retard = activites[
     (activites["% execution"] < 100)
 ]
 
-#st.dataframe(retard)
+st.dataframe(retard)
 if not retard.empty:
     retard["libellé activité"] = retard["Activité"].apply(tronquer)
     fig_retard = px.bar(
